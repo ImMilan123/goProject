@@ -1,17 +1,29 @@
 package main
-import ("fmt"
-	"net/http"
-	"io/ioutil"
+
+import (
+    "fmt"
+    "net/http"
+    "io"
+    "time"
 )
 
 func main() {
-    resp, err := http.Get("https://donkeyontheedge.com/mahir/")
+    client := &http.Client{
+        Timeout: 10 * time.Second,
+    }
+    req, err := http.NewRequest(
+        http.MethodGet,
+        "https://localhost:8080",
+        nil,
+    )
+    if err != nil {
+    }
+    resp, err := client.Do(req)
     if err != nil {
     }
     defer resp.Body.Close()
-    bodyBytes, err := ioutil.ReadAll(resp.Body)
-    bodyString := string(bodyBytes)
-    fmt.Println(bodyString)
+    bodyBytes, err := io.ReadAll(resp.Body)
     if err != nil {
     }
+    fmt.Println(string(bodyBytes))
 }
